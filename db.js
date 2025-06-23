@@ -6,7 +6,7 @@ const sqlConfig = {
     password: '@HelloWorld',
     server: '168.119.169.166',
     port: 1433,
-    database: 'Hospital',
+    database: 'Shopify',
     options:{
         encrypt: false, // Use this if you're on Azure
         trustServerCertificate: true // Change to false if you have a valid certificate

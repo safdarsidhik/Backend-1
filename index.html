@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Management System</title>
+  </head>
+  <body>
+    <form onsubmit="signup()">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter email" />
+
+      <label for="password">password</label>
+      <input type="password" id="password" placeholder="password" />
+
+      <label for="phone">Phone Number</label>
+      <input type="text" id="phone" placeholder="Enter phone number" />
+
+      <button type="submit">Sign Up</button>
+    </form>
+  </body>
+  <script>
+    function signup() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const phone = document.getElementById("phone").value;
+
+      if (phone.length < 10 || phone.length > 10 || isNaN(phone)) {
+        alert("Give Valid Phone Number.");
+        return;
+      }
+
+      fetch("http://localhost:5000/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: document.getElementById("email").value,
+          password: document.getElementById("password").value,
+          phone: document.getElementById("phone").value,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          alert(data.message);
+        });
+      // alert("Sign Up Successful! \nEmail: " + email + "\nPassword: " + password + "\nPhone: " + phone);
+    }
+  </script>
+</html>

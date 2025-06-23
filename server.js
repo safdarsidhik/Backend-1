@@ -136,6 +136,20 @@ app.get('/Patients',async (req, res) => {
     res.json(result.recordset);
 });
 
+//sample post request
+app.post('/signup', async (req, res) => {
+  await poolConnect;
+  const { email, password, phone } = req.body;
+
+  await pool.request()
+    .input('email', sql.VarChar, email)
+    .input('password', sql.VarChar, password)
+    .input('phone', sql.VarChar, phone)
+    .query(
+        `INSERT INTO Users1 (Email, Password, PhoneNumber) VALUES (@email, @password, @phone)`
+    );
+    res.json({ message: 'User signed up successfully' });
+});
 
 
 app.listen(PORT, () => {
