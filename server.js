@@ -8,6 +8,42 @@ const PORT = 5000;
 const{sql, pool, poolConnect, GetMethod} = require('./db');
 app.use(express.json());
 
+app.get('/Doctors',async (req, res) => {
+    
+    const result =await GetMethod('SELECT * FROM Doctors');
+    res.json(result.recordset);
+});
+
+app.get('/Appointments',async (req, res) => {
+    
+    const result =await GetMethod('SELECT  AppointmentID,Patients.Name as patient,Doctors.Name as doctor  FROM Appointments join Doctors on Appointments.DoctorID = Doctors.DoctorID join Patients on Appointments.PatientID = Patients.PatientID');
+    res.json(result.recordset);
+});
+
+app.get('/Patients',async (req, res) => {
+    
+    const result =await GetMethod('SELECT * FROM Patients');
+    res.json(result.recordset);
+});
+
+
+
+//sample post request
+
+app.post('/signup', async (req, res) => {
+  await poolConnect;
+  const { email, password, phone } = req.body;
+
+  await pool.request()
+    .input('email', sql.VarChar, email)
+    .input('password', sql.VarChar, password)
+    .input('phone', sql.VarChar, phone)
+    .query(
+        `INSERT INTO Users1 (Email, Password, PhoneNumber) VALUES (@email, @password, @phone)`
+    );
+    res.json({ message: 'User signed up successfully' });
+});
+
 app.post('/Doctors/new', async (req, res) => {
   await poolConnect;
   const { DoctorID, Name, Specialty } = req.body;
@@ -118,38 +154,8 @@ app.delete('/appointments/:id', async (req, res) => {
   res.send('Appointment deleted');
 });
 
-app.get('/Doctors',async (req, res) => {
-    
-    const result =await GetMethod('SELECT * FROM Doctors');
-    res.json(result.recordset);
-});
 
-app.get('/Appointments',async (req, res) => {
-    
-    const result =await GetMethod('SELECT  AppointmentID,Patients.Name as patient,Doctors.Name as doctor  FROM Appointments join Doctors on Appointments.DoctorID = Doctors.DoctorID join Patients on Appointments.PatientID = Patients.PatientID');
-    res.json(result.recordset);
-});
 
-app.get('/Patients',async (req, res) => {
-    
-    const result =await GetMethod('SELECT * FROM Patients');
-    res.json(result.recordset);
-});
-
-//sample post request
-app.post('/signup', async (req, res) => {
-  await poolConnect;
-  const { email, password, phone } = req.body;
-
-  await pool.request()
-    .input('email', sql.VarChar, email)
-    .input('password', sql.VarChar, password)
-    .input('phone', sql.VarChar, phone)
-    .query(
-        `INSERT INTO Users1 (Email, Password, PhoneNumber) VALUES (@email, @password, @phone)`
-    );
-    res.json({ message: 'User signed up successfully' });
-});
 
 
 app.listen(PORT, () => {
